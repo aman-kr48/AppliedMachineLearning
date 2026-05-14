@@ -1,0 +1,20 @@
+#!/bin/bash
+# Pre-commit hook: runs the test suite before allowing a commit on main.
+
+branch=$(git rev-parse --abbrev-ref HEAD)
+
+if [ "$branch" = "main" ]; then
+    echo "On 'main' branch — running tests before commit..."
+
+    # run the test suite from inside the Assignment_4 folder
+    ( cd Assignment_4 && uv run pytest test.py )
+
+    if [ $? -ne 0 ]; then
+        echo "Tests failed — commit aborted."
+        exit 1
+    fi
+
+    echo "All tests passed — proceeding with commit."
+fi
+
+exit 0
